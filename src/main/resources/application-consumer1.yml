@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: eureka-consumer1
+  eureka:
+    instance:
+      hostname: consumer1
+server:
+  port: 8081
+

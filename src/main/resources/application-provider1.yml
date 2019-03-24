@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: eureka-provider1
+  eureka:
+    instance:
+      hostname: provider1
+server:
+  port: 8080
+
