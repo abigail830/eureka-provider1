@@ -4,6 +4,7 @@ import com.github.abigail830.eurekaclient.service.DiscoveryService;
 import com.github.abigail830.eurekaclient.service.LoadBalanceService;
 import com.github.abigail830.eurekaclient.service.NameFeignClient;
 import com.github.abigail830.eurekaclient.service.NativeService;
+import com.netflix.hystrix.exception.HystrixRuntimeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,7 @@ public class PerformanceController {
     @Autowired
     NativeService nativeService;
 
-    int times=10000;
+    int times=1000;
 
     @GetMapping("/discovery/{providerName}")
     public void discoveryProviderName(@PathVariable String providerName){
@@ -49,6 +50,24 @@ public class PerformanceController {
         Instant start = Instant.now();
         for(int i=0;i<times;i++) {
             loadBalanceService.getProviderName(providerName);
+        }
+        Instant end = Instant.now();
+        log.info("{}ms for {} times loop with load-balance",
+                Duration.between(start,end).toMillis(),times);
+    }
+
+    @GetMapping("/circuit-break/{providerName}")
+    public void loadBalanceProviderNameWithCB(@PathVariable String providerName){
+        Instant start = Instant.now();
+        int exceptionTimes = 0;
+        for(int i=0;i<times;i++) {
+            try{
+                final String result = loadBalanceService.getProviderNameWithCircuitBreak(providerName);
+                log.info("{} - {}", i,result);
+            }catch (HystrixRuntimeException e){
+                log.warn("{} - HystrixRuntimeException happened {} times", i,exceptionTimes++);
+            }
+
         }
         Instant end = Instant.now();
         log.info("{}ms for {} times loop with load-balance",

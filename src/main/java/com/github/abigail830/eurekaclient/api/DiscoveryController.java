@@ -35,6 +35,10 @@ public class DiscoveryController {
     public String loadBalanceProviderName(@PathVariable String providerName){
         return loadBalanceService.getProviderName(providerName);
     }
+    @GetMapping("/circuit-break/{providerName}")
+    public String loadBalanceProviderNameWithCB(@PathVariable String providerName){
+        return loadBalanceService.getProviderNameWithCircuitBreak(providerName);
+    }
 
     @GetMapping("/feign/{providerName}")
     public String feignProviderName(@PathVariable String providerName){

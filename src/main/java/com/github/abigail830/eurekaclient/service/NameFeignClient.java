@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @FeignClient("eureka-provider1")
 public interface NameFeignClient {
 
-    @RequestMapping(value = "/name", method = RequestMethod.GET)
+    @RequestMapping(value = "/{providerName}/name", method = RequestMethod.GET)
     String getName(@PathVariable("providerName") String providerName);
 }
