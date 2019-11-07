@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Duration;
-import java.time.Instant;
-
 @RestController
 @Slf4j
 public class DiscoveryController {
@@ -35,6 +32,7 @@ public class DiscoveryController {
     public String loadBalanceProviderName(@PathVariable String providerName){
         return loadBalanceService.getProviderName(providerName);
     }
+
     @GetMapping("/circuit-break/{providerName}")
     public String loadBalanceProviderNameWithCB(@PathVariable String providerName){
         return loadBalanceService.getProviderNameWithCircuitBreak(providerName);
@@ -42,6 +40,9 @@ public class DiscoveryController {
 
     @GetMapping("/feign/{providerName}")
     public String feignProviderName(@PathVariable String providerName){
-        return nameFeignClient.getName(providerName);
+        if (providerName.equals("eureka-consumer1"))
+            return nameFeignClient.getName();
+        else
+            return "unknown provider";
     }
 }

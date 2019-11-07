@@ -32,7 +32,7 @@ public class PerformanceController {
     @Autowired
     NativeService nativeService;
 
-    int times=1000;
+    int times = 200;
 
     @GetMapping("/discovery/{providerName}")
     public void discoveryProviderName(@PathVariable String providerName){
@@ -86,7 +86,13 @@ public class PerformanceController {
     }
 
     @GetMapping("/feign/{providerName}")
-    public String feignProviderName(@PathVariable String providerName){
-        return nameFeignClient.getName(providerName);
+    public void feignProviderName(@PathVariable String providerName) {
+        Instant start = Instant.now();
+        for (int i = 0; i < times; i++) {
+            nameFeignClient.getName();
+        }
+        Instant end = Instant.now();
+        log.info("{}ms for {} times loop with native",
+                Duration.between(start, end).toMillis(), times);
     }
 }

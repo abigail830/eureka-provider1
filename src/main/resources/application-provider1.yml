@@ -5,5 +5,5 @@ spring:
     instance:
       hostname: provider1
 server:
-  port: 8080
+  port: 8082
 
